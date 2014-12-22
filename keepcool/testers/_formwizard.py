@@ -27,7 +27,7 @@ class FormwizardTester(BaseTester, TestCase):
         # Testing access to formwizard
         for user in self.get_users():
             for args in self.get_args(user):
-                url = reverse(self.urlname, args=args)
+                url = reverse(self.url_name, args=args)
                 response = self.client.get(url)
                 while not self.client.get(response.url).context:
                     response = self.client.get(response.url)
@@ -59,7 +59,7 @@ class FormwizardTester(BaseTester, TestCase):
     def go_though_formwizard(self):
         for user in self.users:
             for args in self.get_args(user):
-                url = reverse(self.urlname, args=args)
+                url = reverse(self.url_name, args=args)
                 response = self.client.get(url)
                 while not self.client.get(response.url).context:
                     response = self.client.get(response.url)

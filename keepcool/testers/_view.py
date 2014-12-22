@@ -6,13 +6,10 @@ from ._base import BaseTester
 class ViewTester(BaseTester):
 
     def test_url_access(self):
-        print "Start test_url_acess"
         for user in self.get_users():
-            print "--------------------------"
-            print "user : " + str(user.email)
+            self.log_user_in(user)
             for args in self.get_args(user):
-                print "   args : " + str(args)
-                url = reverse(self.urlname, args=args)
+                url = reverse(self.url_name, args=args)
                 response = self.client.get(url)
                 self.assertEqual(
                     response.status_code, self.expected_status_code)
