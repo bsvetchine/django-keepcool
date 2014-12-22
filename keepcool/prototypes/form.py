@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from django_keepcool.testers import FormTester
+from keepcool.testers import FormTester
 
 auth_user_model = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 

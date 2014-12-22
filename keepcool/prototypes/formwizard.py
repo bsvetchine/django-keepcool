@@ -3,7 +3,7 @@ import lxml.html
 
 from django.conf import settings
 
-from django_keepcool.testers import FormwizardTester
+from keepcool.testers import FormwizardTester
 
 auth_user_model = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
