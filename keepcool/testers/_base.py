@@ -21,10 +21,10 @@ class BaseTester(object):
     def get_users_by_group(self):
         """List all users from each group."""
         group_required = self.group_required
-        if type(self.group_required) in (str, unicode):
+        if type(group_required) in (str, unicode):
             group_required = [group_required]
         return User.objects.filter(
-            groups__in=group_required).distinct()
+            groups__name__in=group_required).distinct()
 
     def get_users(self):
         """List all users that have access to view."""
@@ -106,4 +106,6 @@ class BaseTester(object):
                 else:
                     combination.append(arg)
             args.append(combination)
+        if not args:
+            return [[]]
         return args
