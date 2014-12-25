@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.db.models.base import ModelBase
 
@@ -109,3 +110,7 @@ class BaseTester(object):
         if not args:
             return [[]]
         return args
+
+    def get_model_type(self, model_descr):
+        app_label, model = model_descr.lower().split(".")
+        return ContentType.objects.get(app_label=app_label, model=model)
