@@ -1,10 +1,12 @@
-from ._form import CreateFormTester
-from ._formwizard import FormwizardTester
-from ._view import ViewTester
+from .views.base import ViewTester
+from .views.edit import CreateViewTester
+
+from .formwizards.namedformwizards import NamedFormwizardTester
 
 
 __all__ = [
-    "CreateFormTester",
-    "FormwizardTester",
     "ViewTester",
+    "CreateViewTester",
+
+    "NamedFormwizardTester"
 ]

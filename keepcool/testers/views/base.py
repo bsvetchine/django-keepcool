@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 
-from ._base import BaseTester
+from .._base import BaseTester
 
 
 class ViewTester(BaseTester):

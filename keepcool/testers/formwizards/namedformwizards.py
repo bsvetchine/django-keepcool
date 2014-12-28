@@ -8,10 +8,10 @@ the tandoori client app.
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from ._base import BaseTester
+from .._base import BaseTester
 
 
-class FormwizardTester(BaseTester, TestCase):
+class NamedFormwizardTester(BaseTester, TestCase):
 
     """Mixin used in wizard view tests."""
 
@@ -55,17 +55,3 @@ class FormwizardTester(BaseTester, TestCase):
                     self.get_wizard_url(step=self.wizard_done_step_name)
                 )
                 response = self.client.get(response.url)
-
-    def go_though_formwizard(self):
-        for user in self.users:
-            for args in self.get_args(user):
-                url = reverse(self.url_name, args=args)
-                response = self.client.get(url)
-                while not self.client.get(response.url).context:
-                    response = self.client.get(response.url)
-                for step in self.wizard_steps:
-                    response = self.client.post(
-                        response.url,
-                        self.get_form_data(step, response)
-                    )
-                return self.client.get(response.url)

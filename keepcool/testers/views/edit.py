@@ -1,12 +1,12 @@
 """Generic form testing class util."""
 from django.core.urlresolvers import reverse
 
-from ._base import BaseTester
+from .._base import BaseTester
 
 
-class CreateFormTester(BaseTester):
+class CreateViewTester(BaseTester):
 
-    def test_create_form(self):
+    def test_view(self):
         model = self.get_model_type(self.model).model_class()
         for user in self.get_users():
             self.log_user_in(user)
