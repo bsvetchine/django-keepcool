@@ -1,19 +1,14 @@
 """
-Generic formwizard testing class util.
-
-You need to associate FormWizardTestingTool with a test case class
-defining a set of data. The test case classes are generally set in
-the tandoori client app.
+Generic namedformwizard testing class util.
 """
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 
 from .._base import BaseTester
 
 
-class NamedFormwizardTester(BaseTester, TestCase):
+class NamedFormwizardTester(BaseTester):
 
-    """Mixin used in wizard view tests."""
+    """Generic NamedFormwizard tester."""
 
     def get_form_data(self, step, response):
         """
@@ -23,9 +18,28 @@ class NamedFormwizardTester(BaseTester, TestCase):
         """
         return self.wizard_form_data[step]
 
+    def get_wizard_url(self, step=None):
+        """
+        Return url.
+
+        If formwizard url need a special url args, you need to specify
+        it in self.wizard_url_args.
+        """
+        if hasattr(self, "wizard_url_args"):
+            args = getattr(self, "wizard_url_args")
+        else:
+            args = []
+        if not step:
+            url_name = self.wizard_url_name
+        else:
+            url_name = self.wizard_url_step_name
+            args += [step]
+        return reverse(url_name, args=args)
+
     def test_formwizard(self):
         # Testing access to formwizard
         for user in self.get_users():
+            self.log_user_in(user)
             for args in self.get_args(user):
                 url = reverse(self.url_name, args=args)
                 response = self.client.get(url)

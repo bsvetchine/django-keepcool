@@ -1,9 +1,14 @@
+"""
+Generic django class base view testing class util.
+"""
 from django.core.urlresolvers import reverse
 
 from .._base import BaseTester
 
 
 class ViewTester(BaseTester):
+
+    """Generic Django BaseView tester."""
 
     def test_url_access(self):
         for user in self.get_users():
