@@ -10,11 +10,36 @@ class ViewTester(BaseTester):
 
     """Generic Django BaseView tester."""
 
-    def test_url_access(self):
-        for user in self.get_users():
-            self.log_user_in(user)
-            for args in self.get_args(user):
-                url = reverse(self.url_name, args=args)
-                response = self.client.get(url)
-                self.assertEqual(
-                    response.status_code, self.expected_status_code)
+    def process(self, user=None):
+        for args in self._get_args(user=user):
+            url = reverse(self.url_name, args=args)
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code, self.expected_status_code)
+
+
+class RedirectViewTester(BaseTester):
+
+    """Generic Django RedirectView tester."""
+
+    def process(self, user=None):
+        for args in self._get_args(user=user):
+            url = reverse(self.url_name, args=args)
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code, 302)
+            response = self.client.get(response.url)
+            self.assertEqual(
+                response.status_code, self.expected_status_code)
+
+
+class TemplateViewTester(BaseTester):
+
+    """Generic Django TemplateViewTester tester."""
+
+    def process(self, user=None):
+        for args in self._get_args(user=user):
+            url = reverse(self.url_name, args=args)
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code, self.expected_status_code)
