@@ -10,6 +10,8 @@ User = get_user_model()
 
 class BaseTester(object):
 
+    anonymous = False
+
     def get_users_by_permission(self):
         """List all users that have access permission."""
         app_label, codename = self.permission_required.split(".")
@@ -35,11 +37,11 @@ class BaseTester(object):
             return self.get_users_by_group()
         return User.objects.all()
 
-    def get_level1_args(self, user):
+    def get_level1_args(self, user=None):
         """Return a list containg all args list combination."""
         return [[first_arg] for first_arg in self.get_first_args(user)]
 
-    def get_level2_args(self, user):
+    def get_level2_args(self, user=None):
         """Return a list containg all args list combination."""
         level2_args = []
         for first_arg in self.get_level1_args(user):
@@ -49,7 +51,7 @@ class BaseTester(object):
             ]
         return level2_args
 
-    def get_level3_args(self, user):
+    def get_level3_args(self, user=None):
         """Return a list containg all args list combination."""
         level3_args = []
         for first_arg, second_arg in self.get_level2_args(user):
@@ -59,7 +61,7 @@ class BaseTester(object):
             ]
         return level3_args
 
-    def get_level4_args(self, user):
+    def get_level4_args(self, user=None):
         """Return a list containg all args list combination."""
         level4_args = []
         for arg1, arg2, arg3 in self.get_level3_args(user):
@@ -69,7 +71,7 @@ class BaseTester(object):
             ]
         return level4_args
 
-    def get_level5_args(self, user):
+    def get_level5_args(self, user=None):
         """Return a list containg all args list combination."""
         level5_args = []
         for arg1, arg2, arg3, arg4 in self.get_level4_args(user):
@@ -79,7 +81,7 @@ class BaseTester(object):
             ]
         return level5_args
 
-    def get_view_args(self, user):
+    def get_view_args(self, user=None):
         """Returns a list containing all args for reversing url name.
 
         Double list format ; [[first_arg, second_arg, third_arg],]."""
@@ -97,7 +99,8 @@ class BaseTester(object):
             args = []
         return args
 
-    def get_args(self, user):
+    def _get_args(self, user):
+        """Get all args to reverse view by name."""
         args = []
         for view_args in self.get_view_args(user):
             combination = []
@@ -111,6 +114,20 @@ class BaseTester(object):
             return [[]]
         return args
 
-    def get_model_type(self, model_descr):
+    def _get_model_type(self, model_descr):
+        """
+        Get content type object from model string.
+
+        Model string format : 'django_app.django_model'.
+        """
         app_label, model = model_descr.lower().split(".")
         return ContentType.objects.get(app_label=app_label, model=model)
+
+    def test_view(self):
+        """Base unit test."""
+        if self.anonymous:
+            self.process()
+        else:
+            for user in self.get_users():
+                self.log_user_in(user)
+                self.process(user)
