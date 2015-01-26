@@ -8,7 +8,7 @@ Contents:
 .. toctree::
 
     installation
-    settings
+    .. settings
     testers_description
     get_started
 

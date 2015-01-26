@@ -3,12 +3,37 @@ Keepcool Testers
 
 You can find below a short description of every tester available in django-keepcool.
 
+
 .. _testers_viewtester
 
 ``keepcool.testers.ViewTester``
 -------------------------------
 
-`Django View tester <https://docs.djangoproject.com/en/dev/ref/class-based-views/base/>`_. Checks whether your view is accessible and responds correctly. It checks if HttpResponse status code is the expected one.
+`Django View tester <https://docs.djangoproject.com/en/dev/ref/class-based-views/base/#view>`_. Checks whether your view is accessible and responds correctly. It checks if HttpResponse status code is the expected one.
+
+
+.. _testers_redirectviewtester
+
+``keepcool.testers.RedirectViewTester``
+-------------------------------
+
+`Django Redirect View tester <https://docs.djangoproject.com/en/dev/ref/class-based-views/base/#redirectview>`_. Checks whether your view is accessible and responds correctly. It checks if HttpResponse status code is the expected one.
+
+
+.. _testers_templateviewtester
+
+``keepcool.testers.TemplateViewTester``
+-------------------------------
+
+`Django Template View tester <https://docs.djangoproject.com/en/dev/ref/class-based-views/base/#templateview>`_. Checks whether your view is accessible and responds correctly. It checks if HttpResponse status code is the expected one.
+
+
+.. _testers_formviewtester
+
+``keepcool.testers.FormViewTester``
+-------------------------------
+
+`Django Form View tester <https://docs.djangoproject.com/en/dev/ref/class-based-views/generic-editing/#formview>`_. Checks whether your view is accessible and responds correctly. Checks that form submission is correctly handled.
 
 
 .. _testers_createviewtester
@@ -32,6 +57,7 @@ You can find below a short description of every tester available in django-keepc
  * the form submission is correctly handled.
  * no objects are created or deleted.
 
+
 .. _testers_deleteviewtester
 
 ``keepcool.testers.DeleteViewTester``
@@ -41,6 +67,7 @@ You can find below a short description of every tester available in django-keepc
  * the view is accessible.
  * the form submission is correctly handled.
  * an object is deleted.
+
 
 .. _testers_namedformwizardtester
 
