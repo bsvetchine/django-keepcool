@@ -36,36 +36,33 @@ class NamedFormwizardTester(BaseTester):
             args += [step]
         return reverse(url_name, args=args)
 
-    def test_formwizard(self):
-        # Testing access to formwizard
-        for user in self.get_users():
-            self.log_user_in(user)
-            for args in self.get_args(user):
-                url = reverse(self.url_name, args=args)
-                response = self.client.get(url)
-                while not self.client.get(response.url).context:
-                    response = self.client.get(response.url)
-                self.assertEqual(
-                    response.url,
-                    "http://testserver" +
-                    self.get_wizard_url(step=self.wizard_steps[0])
-                )
-                # Check url name configuration
-                wizard = self.client.get(response.url).context['wizard']
-                self.assertEqual(wizard['url_name'], self.wizard_url_step_name)
-                # Check wizard forms
-                for step in self.wizard_steps:
-                    wizard_context = self.client.get(
-                        response.url).context["wizard"]
-                    self.assertEqual(wizard_context["steps"].current, step)
-                    response = self.client.post(
-                        response.url,
-                        self.get_form_data(step, response)
-                    )
-                # Check wizard form done
-                self.assertEqual(
-                    response.url,
-                    "http://testserver" +
-                    self.get_wizard_url(step=self.wizard_done_step_name)
-                )
+    def process(self, user=None):
+        for args in self._get_args(user):
+            url = reverse(self.url_name, args=args)
+            response = self.client.get(url)
+            while not self.client.get(response.url).context:
                 response = self.client.get(response.url)
+            self.assertEqual(
+                response.url,
+                "http://testserver" +
+                self.get_wizard_url(step=self.wizard_steps[0])
+            )
+            # Check url name configuration
+            wizard = self.client.get(response.url).context['wizard']
+            self.assertEqual(wizard['url_name'], self.wizard_url_step_name)
+            # Check wizard forms
+            for step in self.wizard_steps:
+                wizard_context = self.client.get(
+                    response.url).context["wizard"]
+                self.assertEqual(wizard_context["steps"].current, step)
+                response = self.client.post(
+                    response.url,
+                    self.get_form_data(step, response)
+                )
+            # Check wizard form done
+            self.assertEqual(
+                response.url,
+                "http://testserver" +
+                self.get_wizard_url(step=self.wizard_done_step_name)
+            )
+            response = self.client.get(response.url)
