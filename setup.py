@@ -11,7 +11,7 @@ def read(fname):
     return open(os.path.join(ROOT, fname)).read()
 
 setup(
-    name="tandoori-keepcool",
+    name="django-keepcool",
     version="1.0.0",
     url="",
     license="MIT",
