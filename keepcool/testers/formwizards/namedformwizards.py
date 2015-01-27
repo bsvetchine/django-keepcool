@@ -54,7 +54,9 @@ class NamedFormwizardTester(BaseTester):
             for step in self.wizard_steps:
                 wizard_context = self.client.get(
                     response.url).context["wizard"]
-                self.assertEqual(wizard_context["steps"].current, step)
+                current_step = wizard_context["steps"].current
+                if current_step != step and step in self.optional_steps:
+                    continue
                 response = self.client.post(
                     response.url,
                     self.get_form_data(step, response)
