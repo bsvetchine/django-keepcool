@@ -1,5 +1,6 @@
 from .views.base import ViewTester, TemplateViewTester, RedirectViewTester
 from .views.detail import DetailViewTester
+from .views.list import ListViewTester
 from .views.edit import (
     FormViewTester, CreateViewTester, UpdateViewTester, DeleteViewTester)
 
@@ -12,6 +13,8 @@ __all__ = [
     "RedirectViewTester",
 
     "DetailViewTester",
+
+    "ListViewTester",
 
     "FormViewTester",
     "CreateViewTester",
