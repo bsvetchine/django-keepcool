@@ -17,7 +17,7 @@ class FormViewTester(BaseTester):
             while response.status_code in [301, 302]:
                 response = self.client.get(response.url)
             self.assertEqual(response.status_code, 200)
-            response = self.client.post(url, self.form_data)
+            response = self._post(url, self.form_data)
             self.assertTrue(response.status_code in [200, 302])
 
 
@@ -32,7 +32,7 @@ class CreateViewTester(BaseTester):
             url = reverse(self.url_name, args=args)
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
-            response = self.client.post(url, self.form_data)
+            response = self._post(url, self.form_data)
             self.assertTrue(response.status_code in [200, 302])
             self.assertEqual(model.objects.count(), initial_count+1)
 
@@ -48,7 +48,7 @@ class UpdateViewTester(BaseTester):
             url = reverse(self.url_name, args=args)
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
-            response = self.client.post(url, self.form_data)
+            response = self._post(url, self.form_data)
             self.assertTrue(response.status_code in [200, 302])
             self.assertEqual(model.objects.count(), initial_count)
 
@@ -64,6 +64,6 @@ class DeleteViewTester(BaseTester):
             url = reverse(self.url_name, args=args)
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
-            response = self.client.post(url, self.form_data)
+            response = self._post(url, self.form_data)
             self.assertTrue(response.status_code in [200, 302])
             self.assertEqual(model.objects.count(), initial_count-1)

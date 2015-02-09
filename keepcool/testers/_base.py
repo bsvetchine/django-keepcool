@@ -11,14 +11,22 @@ User = get_user_model()
 class BaseTester(object):
 
     anonymous = False
+    ajax_post = False
 
     def get_users_by_permission(self):
         """List all users that have access permission."""
-        app_label, codename = self.permission_required.split(".")
-        perm = Permission.objects.get(
-            content_type__app_label=app_label, codename=codename)
+        permissions = []
+        required = self.permission_required
+        if isinstance(required, str):
+            required = [required]
+        for perm_required in required:
+            app_label, codename = perm_required.split(".")
+            perm = Permission.objects.get(
+                content_type__app_label=app_label, codename=codename)
+            permissions.append(perm.id)
         return User.objects.filter(
-            Q(groups__permissions=perm) | Q(user_permissions=perm)
+            Q(groups__permissions__id__in=permissions) |
+            Q(user_permissions__id__in=permissions)
         ).distinct()
 
     def get_users_by_group(self):
@@ -122,6 +130,19 @@ class BaseTester(object):
         """
         app_label, model = model_descr.lower().split(".")
         return ContentType.objects.get(app_label=app_label, model=model)
+
+    def _post(self, url, data=None):
+        """
+        Post data to url.
+
+        If self.ajax_post, it will simulate an ajax post.
+        """
+        if self.ajax_post:
+            response = self.client.post(
+                url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        else:
+            response = self.client.post(url, data)
+        return response
 
     def test_view(self):
         """Base unit test."""
