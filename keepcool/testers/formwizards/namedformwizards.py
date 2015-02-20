@@ -18,24 +18,6 @@ class NamedFormwizardTester(BaseTester):
         """
         return self.wizard_form_data[step]
 
-    def get_wizard_url(self, step=None):
-        """
-        Return url.
-
-        If formwizard url need a special url args, you need to specify
-        it in self.wizard_url_args.
-        """
-        if hasattr(self, "wizard_url_args"):
-            args = getattr(self, "wizard_url_args")
-        else:
-            args = []
-        if not step:
-            url_name = self.wizard_url_name
-        else:
-            url_name = self.wizard_url_step_name
-            args += [step]
-        return reverse(url_name, args=args)
-
     def process(self, user=None):
         for args in self._get_args(user):
             url = reverse(self.url_name, args=args)
@@ -45,7 +27,8 @@ class NamedFormwizardTester(BaseTester):
             self.assertEqual(
                 response.url,
                 "http://testserver" +
-                self.get_wizard_url(step=self.wizard_steps[0])
+                reverse(self.wizard_url_step_name,
+                        args=args+[self.wizard_steps[0]])
             )
             # Check url name configuration
             wizard = self.client.get(response.url).context['wizard']
@@ -65,6 +48,7 @@ class NamedFormwizardTester(BaseTester):
             self.assertEqual(
                 response.url,
                 "http://testserver" +
-                self.get_wizard_url(step=self.wizard_done_step_name)
+                reverse(self.wizard_url_step_name,
+                        args=args+[self.wizard_done_step_name])
             )
             response = self.client.get(response.url)
