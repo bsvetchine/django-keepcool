@@ -27,7 +27,7 @@ class BaseTester(object):
         return User.objects.filter(
             Q(groups__permissions__id__in=permissions) |
             Q(user_permissions__id__in=permissions)
-        ).distinct()
+        )
 
     def get_users_by_group(self):
         """List all users from each group."""
@@ -35,15 +35,18 @@ class BaseTester(object):
         if type(group_required) in (str, unicode):
             group_required = [group_required]
         return User.objects.filter(
-            groups__name__in=group_required).distinct()
+            groups__name__in=group_required)
 
     def get_users(self):
         """List all users that have access to view."""
+        users = User.objects.all()
         if hasattr(self, "permission_required"):
-            return self.get_users_by_permission()
-        elif hasattr(self, "group_required"):
-            return self.get_users_by_group()
-        return User.objects.all()
+            # get_users_by_permission may contains duplicate users.
+            # Using intersection should eliminate duplicate elements.
+            users &= self.get_users_by_permission()
+        if hasattr(self, "group_required"):
+            users &= self.get_users_by_group()
+        return users
 
     def get_level1_args(self, user=None):
         """Return a list containg all args list combination."""
