@@ -1,6 +1,4 @@
-"""
-Generic namedformwizard testing class util.
-"""
+"""Generic namedformwizard testing class util."""
 from django.core.urlresolvers import reverse
 
 from .._base import BaseTester
@@ -24,15 +22,16 @@ class NamedFormwizardTester(BaseTester):
             response = self.client.get(url)
             while not self.client.get(response.url).context:
                 response = self.client.get(response.url)
-            self.assertEqual(
-                response.url,
-                "http://testserver" +
+            expected_url = "{}://{}{}".format(
+                response.request["wsgi.url_scheme"],
+                response.request.get("HTTP_HOST", "testserver"),
                 reverse(self.wizard_url_step_name,
                         args=args+[self.wizard_steps[0]])
             )
+            self.assertEqual(response.url, expected_url)
             # Check url name configuration
             wizard = self.client.get(response.url).context['wizard']
-            self.assertEqual(wizard['url_name'], self.wizard_url_step_name)
+            self.assertEqual(wizard["url_name"], self.wizard_url_step_name)
             # Check wizard forms
             for step in self.wizard_steps:
                 wizard_context = self.client.get(
@@ -44,11 +43,13 @@ class NamedFormwizardTester(BaseTester):
                     response.url,
                     self.get_form_data(step, response)
                 )
+
             # Check wizard form done
-            self.assertEqual(
-                response.url,
-                "http://testserver" +
+            expected_url = "{}://{}{}".format(
+                response.request["wsgi.url_scheme"],
+                response.request.get("HTTP_HOST", "testserver"),
                 reverse(self.wizard_url_step_name,
                         args=args+[self.wizard_done_step_name])
             )
+            self.assertEqual(response.url, expected_url)
             response = self.client.get(response.url)
