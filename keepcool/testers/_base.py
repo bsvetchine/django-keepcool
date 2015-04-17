@@ -32,7 +32,11 @@ class BaseTester(object):
     def get_users_by_group(self):
         """List all users from each group."""
         group_required = self.group_required
-        if type(group_required) in (str, unicode):
+        if isinstance(group_required, str):
+            # python3 fallback
+            group_required = [group_required]
+        elif isinstance(group_required, unicode):
+            # python2 fallback
             group_required = [group_required]
         return User.objects.filter(
             groups__name__in=group_required)
