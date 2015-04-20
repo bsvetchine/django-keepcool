@@ -33,11 +33,14 @@ class BaseTester(object):
         """List all users from each group."""
         group_required = self.group_required
         if isinstance(group_required, str):
-            # python3 fallback
             group_required = [group_required]
-        elif isinstance(group_required, unicode):
-            # python2 fallback
-            group_required = [group_required]
+        try:
+            # python 2 only
+            if isinstance(group_required, unicode):
+                group_required = [group_required]
+        except NameError:
+            # In python3 there is no more unicode type
+            pass
         return User.objects.filter(
             groups__name__in=group_required)
 
@@ -97,7 +100,7 @@ class BaseTester(object):
         return level5_args
 
     def get_view_args(self, user=None):
-        """Returns a list containing all args for reversing url name.
+        """Return a list containing all args for reversing url name.
 
         Double list format ; [[first_arg, second_arg, third_arg],]."""
         if hasattr(self, "get_fitfh_args"):
